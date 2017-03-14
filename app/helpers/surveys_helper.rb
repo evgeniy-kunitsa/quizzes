@@ -42,8 +42,8 @@ module SurveysHelper
     attempt.survey.questions.map { |q| Survey::Answer.new(question_id: q.id) }
   end
 
-  def the_chosen_one? answer, option
-    if answer.option_id == option.id then 'chosen' else nil end
+  def the_chosen_one? attempt, option
+    if attempt.answers.where(question_id: option.question.id, option_id: option.id).any? then 'chosen' else nil end
   end
 
   def number_of_people_who_also_answered option_id
@@ -51,11 +51,11 @@ module SurveysHelper
     "<span class='number'> #{count} </span> #{'answer'.pluralize}".html_safe
   end
 
-  def get_color_of_option answer, option
-    if is_quiz?(answer.question.survey.survey_type)
+  def get_color_of_option attempt, option
+    if is_quiz?(attempt.survey.survey_type)
       if option.correct
         'badge badge-success'
-      elsif the_chosen_one?(answer, option)
+      elsif the_chosen_one?(attempt, option)
         'badge badge badge-danger'
       end
     elsif is_score?(answer.question.survey.survey_type)
