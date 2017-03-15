@@ -39,7 +39,7 @@ module SurveysHelper
   end
 
   def get_answer_fields attempt
-    attempt.survey.questions.map { |q| Survey::Answer.new(question_id: q.id) }
+    attempt.survey.questions.map { |q| Survey::Answer.new(question_id: q.id) }.shuffle
   end
 
   def the_chosen_one? attempt, option
